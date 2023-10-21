@@ -1,0 +1,32 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 50px;
+    font-size: 24px;
+}
+
+.letters{
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 265px 0;
+}
+
+.table-words td{
+    height: 80px;
+    width: 80px;
+    text-align: center;
+    border: 1px solid gray;
+    border-radius: 10%;
+}

@@ -26,9 +26,9 @@ window.onload = function () {
         const table = document.createElement('table');
         table.className = 'table-keyboard';
         const numRows = 3;
-        const numColumns = 10;
+        const numColumns = 9;
         let lettersCounter = 0;
-        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const alphabet = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
         for (let i = 0; i < numRows; i++) {
             const row = document.createElement('tr');
             row.classList.add('lettersKeyboard');

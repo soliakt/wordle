@@ -34,14 +34,14 @@ nav {
     background-color: rgba(237, 237, 237, 0.542);
 }
 
-.table-keyboard{
+.table__keyboard{
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
 }
 
-.table-words td{
+.table__words td{
     height: 70px;
     width: 70px;
     text-align: center;

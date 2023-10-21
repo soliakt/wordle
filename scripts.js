@@ -26,16 +26,23 @@ window.onload = function () {
         const table = document.createElement('table');
         table.className = 'table-keyboard';
         const numRows = 3;
-        const numColumns = 9;
+        const numColumns = 10;
         let lettersCounter = 0;
-        const alphabet = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
+        const alphabet = 'QWERTYUIOPASDFGHJKLÑ ZXCVBNM';
         for (let i = 0; i < numRows; i++) {
             const row = document.createElement('tr');
             row.classList.add('lettersKeyboard');
             for (let j = 0; j < numColumns; j++) {
-                const letter = alphabet.charAt(lettersCounter);
                 const cell = document.createElement('td');
-                cell.innerHTML = `<button type="button" id="${letter.toLowerCase()}">${letter}</button>`;
+                if(i == 2 && j == 9) cell.innerHTML = `<button type="button" style="background-color: rgba(43, 43, 43, 0.542)" id="delete"><</button>`;
+                else if (i == 2 && j == 0) {
+                    cell.innerHTML = `<button type="button" style="background-color: rgba(43, 43, 43, 0.542); width:100px;" id="send">ENVIAR</button>`;
+                    j++;
+                }
+                else {
+                    const letter = alphabet.charAt(lettersCounter);
+                    cell.innerHTML = `<button type="button" id="${letter.toLowerCase()}">${letter}</button>`;
+                }
                 row.appendChild(cell);
                 lettersCounter++;
             }

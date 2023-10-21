@@ -26,8 +26,12 @@ nav {
     height: 50px;
     margin: 2px;
     background-color: #fff;
-    border: 1px solid gray;
+    border: 1px solid grey;
     border-radius: 5px;
+}
+
+.lettersKeyboard button:hover{
+    background-color: rgba(237, 237, 237, 0.542);
 }
 
 .table-keyboard{
@@ -38,17 +42,17 @@ nav {
 }
 
 .table-words td{
-    height: 80px;
-    width: 80px;
+    height: 70px;
+    width: 70px;
     text-align: center;
     border: 1px solid gray;
     border-radius: 10%;
 }
 
 .words{
-    height: 500px;
+    height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 265px 0;
+    padding: 215px 0;
 }

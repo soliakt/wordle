@@ -1,8 +1,4 @@
-/*
-    Alumno: Víctor Gimeno Sanz
-    NIA: 10017766
-    Práctica: Wordle
-*/
+
 window.onload = function () {
     function generateLettersSquares(){
         // Definimos debajo de qué elemento vamos a generar la tabla (parentElement)

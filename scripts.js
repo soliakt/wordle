@@ -61,17 +61,44 @@ window.onload = function () {
     generateKeyboard();
     function resetValues(){
         var wordsToDiscover = ["marea", "arena", "diana"];
-        wordToDiscover = wordsToDiscover[Math.floor(Math.random() * wordsToDiscover.length)].toUpperCase;
+        wordToDiscover = wordsToDiscover[Math.floor(Math.random() * wordsToDiscover.length)].toUpperCase();
+        // Declaro dos alphabet porque uno tiene el espacio y otro no
         let alphabet = 'qwertyuiopasdfghjklñzxcvbnm';
+        let lettersCounterForRow = 0;
+        let wordToInsert = "";
+        let wordsInCounter = 0;
         // Esto recorre todos los id y en caso de que algun evento se haya producido llama a la funcion letterClicked
-        // Añadimos de 0 a letters incluido porque en el array de letras hay un espacio
         for (var i = 0; i < lettersInAlphabet; i++) {
             document.getElementById(alphabet[i]).addEventListener('click', function() {
-                console.log(this.id);
+                lettersCounterForRow++;
+                console.log(lettersCounterForRow);
+                wordToInsert += this.id;
+                console.log(wordToInsert);
+                if (lettersCounterForRow > 4) {
+                    // Una vez se han introducido las 5 letras
+                    //lettersCounterForRow = 0;
+                    //wordToInsert = "";
+                    document.getElementById("sendWord").addEventListener('click', function(){
+                        processInput(wordToDiscover, wordToInsert, wordsInCounter, alphabet);
+                    })
+                }
+                insertWordInTable(wordToInsert, 0);
             });
         }
+
     }
     resetValues();
+
+    function processInput(wordToDiscover, wordToInsert, wordsInCounter, alphabet){
+        // 2 partes: colorea tabla y colorea teclado
+        // Palabra a descubrir: remar
+        // Palabra introducida: marea
+        let arrayWordToDiscover = wordToDiscover.split("");
+        let arrayWordToInsert = wordToInsert.split("");
+        alert(arrayWordToDiscover);
+        alert(arrayWordToInsert);
+        
+    }
 
 
     function letterClicked(id, wordToDiscover){

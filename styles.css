@@ -15,12 +15,29 @@ nav {
     font-size: 24px;
 }
 
-.letters{
-    height: 500px;
+.lettersKeyboard{
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+
+
+.lettersKeyboard td button{
+    width: 50px;
+    height: 50px;
+    margin: 2px;
+    background-color: #fff;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+
+.table-keyboard{
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 265px 0;
+    flex-direction: column;
 }
 
 .table-words td{
@@ -30,3 +47,12 @@ nav {
     border: 1px solid gray;
     border-radius: 10%;
 }
+
+.words{
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 265px 0;
+}
+

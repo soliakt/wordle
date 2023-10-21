@@ -62,41 +62,51 @@ window.onload = function () {
     function resetValues(){
         var wordsToDiscover = ["marea", "arena", "diana"];
         wordToDiscover = wordsToDiscover[Math.floor(Math.random() * wordsToDiscover.length)].toUpperCase();
+        alert("SPOILER ALERT. La palabra a descubrir es: " + wordToDiscover)
         // Declaro dos alphabet porque uno tiene el espacio y otro no
         let alphabet = 'qwertyuiopasdfghjklñzxcvbnm';
         let lettersCounterForRow = 0;
-        let wordToInsert = "";
+        let insertedWord = "";
         let wordsInCounter = 0;
+        let attempt = 0;
         // Esto recorre todos los id y en caso de que algun evento se haya producido llama a la funcion letterClicked
         for (var i = 0; i < lettersInAlphabet; i++) {
             document.getElementById(alphabet[i]).addEventListener('click', function() {
                 lettersCounterForRow++;
                 console.log(lettersCounterForRow);
-                wordToInsert += this.id;
-                console.log(wordToInsert);
+                insertedWord += this.id;
+                console.log(insertedWord);
                 if (lettersCounterForRow > 4) {
                     // Una vez se han introducido las 5 letras
                     //lettersCounterForRow = 0;
-                    //wordToInsert = "";
+                    //insertedWord = "";
                     document.getElementById("sendWord").addEventListener('click', function(){
-                        processInput(wordToDiscover, wordToInsert, wordsInCounter, alphabet);
+                        processInput(wordToDiscover, insertedWord, wordsInCounter, alphabet, attempt);
                     })
                 }
-                insertWordInTable(wordToInsert, 0);
+                insertWordInTable(insertedWord, 0);
             });
         }
 
     }
     resetValues();
 
-    function processInput(wordToDiscover, wordToInsert, wordsInCounter, alphabet){
+    function processInput(wordToDiscover, insertedWord, wordsInCounter, alphabet, attempt){
         // 2 partes: colorea tabla y colorea teclado
         // Palabra a descubrir: remar
         // Palabra introducida: marea
-        let arrayWordToDiscover = wordToDiscover.split("");
-        let arrayWordToInsert = wordToInsert.split("");
-        alert(arrayWordToDiscover);
-        alert(arrayWordToInsert);
+        let arrayWordToDiscover = wordToDiscover.toLowerCase().split("");
+        let arrayinsertedWord = insertedWord.toLowerCase().split("");
+        for (let k = 0; k < 5; k++){
+            if (arrayinsertedWord[k] == arrayWordToDiscover[k]){
+                // Aqui buscamos la fila en la que hemos introducido la palabra
+                var attemptRow = document.getElementById("wordIn__" + attempt);
+                // mediante "cells" de js accedemos al td que nos interesa y le cambiamos el color
+                attemptRow.cells[k].style.backgroundColor = "green";
+                // ahora le cambiamos el color a la tecla del teclado
+                document.getElementById(arrayinsertedWord[k]).style.backgroundColor = "green";
+            }
+        }
         
     }
 

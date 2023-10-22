@@ -69,24 +69,44 @@ window.onload = function () {
         let insertedWord = "";
         let wordsInCounter = 0;
         let attempt = 0;
-        // Esto recorre todos los id y en caso de que algun evento se haya producido llama a la funcion letterClicked
-        for (var i = 0; i < lettersInAlphabet; i++) {
-            document.getElementById(alphabet[i]).addEventListener('click', function() {
+
+        function letterClickedHandler(){
+            if (lettersCounterForRow < 5){
                 lettersCounterForRow++;
                 insertedWord += this.id;
-                if (lettersCounterForRow > 4) {
-                    // Una vez se han introducido las 5 letras
-                    document.getElementById("sendWord").addEventListener('click', function(){
-                        processInput(wordToDiscover, insertedWord, attempt);
-                        lettersCounterForRow = 0;
-                        attempt++;
-                        insertedWord = "";
-                    })
-                }
                 insertWordInTable(insertedWord, attempt);
-            });
+            } else sendWordHandler(); // llamamos al handler del botón enviar
+        }
+
+        function sendWordHandler(){
+            if (lettersCounterForRow > 4){
+                processInput(wordToDiscover, insertedWord, attempt);
+                lettersCounterForRow = 0;
+                attempt++;
+                insertedWord = "";
+            }
+        }
+        // Asigna el handler al botón enviar
+        document.getElementById("sendWord").addEventListener('click', sendWordHandler);
+
+
+        function keyDownHandler(event){
+            const key = event.key.toLowerCase();
+            if (alphabet.includes(key) && lettersCounterForRow < 5) {
+                lettersCounterForRow++;
+                insertedWord += key;
+                insertWordInTable(insertedWord, attempt);
+            } else if (alphabet.includes(key) && lettersCounterForRow < 6){
+                sendWordHandler(); // llamamos al handler del botón enviar
+            }
+        }
+        // Esto asigna las funciones a los eventos
+        for (var i = 0; i < alphabet.length; i++) {
+            document.getElementById(alphabet[i]).addEventListener('click', letterClickedHandler);
+            window.addEventListener('keydown', keyDownHandler);
         }
     }
+
     resetValues();
 
     function processInput(wordToDiscover, insertedWord, attempt){

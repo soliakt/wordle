@@ -73,9 +73,7 @@ window.onload = function () {
         for (var i = 0; i < lettersInAlphabet; i++) {
             document.getElementById(alphabet[i]).addEventListener('click', function() {
                 lettersCounterForRow++;
-                console.log(lettersCounterForRow);
                 insertedWord += this.id;
-                console.log(insertedWord);
                 if (lettersCounterForRow > 4) {
                     // Una vez se han introducido las 5 letras
                     //lettersCounterForRow = 0;
@@ -92,11 +90,9 @@ window.onload = function () {
     resetValues();
 
     function processInput(wordToDiscover, insertedWord, wordsInCounter, alphabet, attempt){
-        // 2 partes: colorea tabla y colorea teclado
-        // Palabra a descubrir: remar
-        // Palabra introducida: marea
         let arrayWordToDiscover = wordToDiscover.toLowerCase().split("");
         let arrayinsertedWord = insertedWord.toLowerCase().split("");
+        let correctLettersIn = ["_", "_", "_", "_", "_"];
         for (let k = 0; k < 5; k++){
             if (arrayinsertedWord[k] == arrayWordToDiscover[k]){
                 // Aqui buscamos la fila en la que hemos introducido la palabra
@@ -105,14 +101,24 @@ window.onload = function () {
                 attemptRow.cells[k].style.backgroundColor = "green";
                 // ahora le cambiamos el color a la tecla del teclado
                 document.getElementById(arrayinsertedWord[k]).style.backgroundColor = "green";
+                // Añadimos la letra al array de letras correctas para evitar duplicidades
+                correctLettersIn[k] = arrayWordToDiscover[k];
+            } else {
+                for (let m = 0; m < 5; m++){
+                    if (arrayinsertedWord[k] == arrayWordToDiscover[m] && arrayinsertedWord[m] != correctLettersIn[m]){
+                       // Aqui buscamos la fila en la que hemos introducido la palabra
+                        var attemptRow = document.getElementById("wordIn__" + attempt);
+                        // mediante "cells" de js accedemos al td que nos interesa y le cambiamos el color
+                        attemptRow.cells[k].style.backgroundColor = "orange";
+                        // ahora le cambiamos el color a la tecla del teclado
+                        document.getElementById(arrayinsertedWord[k]).style.backgroundColor = "orange"; 
+                    }
+                }
             }
         }
-        
-    }
-
-
-    function letterClicked(id, wordToDiscover){
-        alert("La letra clicada es " + id + ". Y la palabra buscada es: " + wordToDiscover);
+        console.log(missplacedLetters);
+        // to discover: DIANA
+        // inserted:    DIANR
     }
 
 

@@ -80,12 +80,12 @@ window.onload = function () {
                     //insertedWord = "";
                     document.getElementById("sendWord").addEventListener('click', function(){
                         processInput(wordToDiscover, insertedWord, wordsInCounter, alphabet, attempt);
+                        attempt++;
                     })
                 }
-                insertWordInTable(insertedWord, 0);
+                insertWordInTable(insertedWord, attempt);
             });
         }
-
     }
     resetValues();
 
@@ -129,5 +129,4 @@ window.onload = function () {
         // Itera sobre las celdas y asigna las letras de la palabra
         for (var i = 0; i < 5; i++) columns[i].innerHTML = wordToDiscover.charAt(i);
     }
-    insertWordInTable('MAREA', 1);
 }

@@ -76,11 +76,11 @@ window.onload = function () {
                 insertedWord += this.id;
                 if (lettersCounterForRow > 4) {
                     // Una vez se han introducido las 5 letras
-                    //lettersCounterForRow = 0;
-                    //insertedWord = "";
                     document.getElementById("sendWord").addEventListener('click', function(){
-                        processInput(wordToDiscover, insertedWord, wordsInCounter, alphabet, attempt);
+                        processInput(wordToDiscover, insertedWord, attempt);
+                        lettersCounterForRow = 0;
                         attempt++;
+                        insertedWord = "";
                     })
                 }
                 insertWordInTable(insertedWord, attempt);
@@ -89,7 +89,7 @@ window.onload = function () {
     }
     resetValues();
 
-    function processInput(wordToDiscover, insertedWord, wordsInCounter, alphabet, attempt){
+    function processInput(wordToDiscover, insertedWord, attempt){
         let arrayWordToDiscover = wordToDiscover.toLowerCase().split("");
         let arrayinsertedWord = insertedWord.toLowerCase().split("");
         let correctLettersIn = ["_", "_", "_", "_", "_"];
@@ -116,9 +116,6 @@ window.onload = function () {
                 }
             }
         }
-        console.log(missplacedLetters);
-        // to discover: DIANA
-        // inserted:    DIANR
     }
 
 
@@ -127,6 +124,6 @@ window.onload = function () {
         var row = document.getElementById('wordIn__' + rowNumber);
         var columns = row.getElementsByTagName("td");
         // Itera sobre las celdas y asigna las letras de la palabra
-        for (var i = 0; i < 5; i++) columns[i].innerHTML = wordToDiscover.charAt(i);
+        for (var i = 0; i < 5; i++) columns[i].innerHTML = wordToDiscover.charAt(i).toUpperCase();
     }
 }

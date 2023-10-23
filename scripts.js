@@ -25,6 +25,7 @@ window.onload = function () {
         letterSquaresContainer.appendChild(table);
     }
     generateLettersSquares();
+
     function generateKeyboard(){
         // Definimos debajo de qué elemento vamos a generar la tabla (parentElement)
         parentElement = document.getElementById('keyboardSquares');
@@ -59,52 +60,63 @@ window.onload = function () {
         parentElement.appendChild(table);
     }
     generateKeyboard();
+
     function resetValues(){
         var wordsToDiscover = ["marea", "arena", "diana"];
         wordToDiscover = wordsToDiscover[Math.floor(Math.random() * wordsToDiscover.length)].toUpperCase();
         alert("SPOILER ALERT. La palabra a descubrir es: " + wordToDiscover)
         // Declaro dos alphabet porque uno tiene el espacio y otro no
         let alphabet = 'qwertyuiopasdfghjklñzxcvbnm';
-        let lettersCounterForRow = 0;
+        let lettersCounterPerRow = 0;
         let insertedWord = "";
-        let wordsInCounter = 0;
         let attempt = 0;
 
         function letterClickedHandler(){
-            if (lettersCounterForRow < 5){
-                lettersCounterForRow++;
+            if (lettersCounterPerRow < 5){
+                lettersCounterPerRow++;
                 insertedWord += this.id;
                 insertWordInTable(insertedWord, attempt);
             } else sendWordHandler(); // llamamos al handler del botón enviar
         }
 
+        function keyDownHandler(event){
+            const key = event.key.toLowerCase();
+            if (alphabet.includes(key) && lettersCounterPerRow < 5) { // el .includes(key) nos asegura que solo se escuchan las teclas del abecedario
+                lettersCounterPerRow++;
+                insertedWord += key;
+                insertWordInTable(insertedWord, attempt);
+            } else if (alphabet.includes(key) && lettersCounterPerRow > 4) {
+                alert("He entrado");
+                sendWordHandler(); // llamamos al handler del botón enviar
+            }
+        }
+       
+
         function sendWordHandler(){
-            if (lettersCounterForRow > 4){
+            if (lettersCounterPerRow > 4){
                 processInput(wordToDiscover, insertedWord, attempt);
-                lettersCounterForRow = 0;
+                lettersCounterPerRow = 0;
                 attempt++;
                 insertedWord = "";
             }
         }
-        // Asigna el handler al botón enviar
-        document.getElementById("sendWord").addEventListener('click', sendWordHandler);
 
-
-        function keyDownHandler(event){
-            const key = event.key.toLowerCase();
-            if (alphabet.includes(key) && lettersCounterForRow < 5) {
-                lettersCounterForRow++;
-                insertedWord += key;
-                insertWordInTable(insertedWord, attempt);
-            } else if (alphabet.includes(key) && lettersCounterForRow < 6){
-                sendWordHandler(); // llamamos al handler del botón enviar
-            }
-        }
         // Esto asigna las funciones a los eventos
         for (var i = 0; i < alphabet.length; i++) {
             document.getElementById(alphabet[i]).addEventListener('click', letterClickedHandler);
             window.addEventListener('keydown', keyDownHandler);
         }
+
+        // Asigna el handler al botón enviar
+        document.getElementById("sendWord").addEventListener('click', sendWordHandler);
+
+        // Escucha el evento "keydown" en la ventana para el "Enter" y llama a sendWordHandler
+        window.addEventListener('keydown', function (event) {
+            if (event.key === "Enter") {
+                sendWordHandler();
+            }
+        });
+
     }
 
     resetValues();

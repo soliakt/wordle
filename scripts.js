@@ -85,8 +85,7 @@ window.onload = function () {
                 lettersCounterPerRow++;
                 insertedWord += key;
                 insertWordInTable(insertedWord, attempt);
-            } else if (alphabet.includes(key) && lettersCounterPerRow > 4) {
-                alert("He entrado");
+            } else if (event.key === "Enter") {
                 sendWordHandler(); // llamamos al handler del botón enviar
             }
         }
@@ -110,12 +109,6 @@ window.onload = function () {
         // Asigna el handler al botón enviar
         document.getElementById("sendWord").addEventListener('click', sendWordHandler);
 
-        // Escucha el evento "keydown" en la ventana para el "Enter" y llama a sendWordHandler
-        window.addEventListener('keydown', function (event) {
-            if (event.key === "Enter") {
-                sendWordHandler();
-            }
-        });
 
     }
 

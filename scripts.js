@@ -64,7 +64,7 @@ window.onload = function () {
     function resetValues(){
         var wordsToDiscover = ["marea", "arena", "diana"];
         wordToDiscover = wordsToDiscover[Math.floor(Math.random() * wordsToDiscover.length)].toUpperCase();
-        alert("SPOILER ALERT. La palabra a descubrir es: " + wordToDiscover)
+        //alert("SPOILER ALERT. La palabra a descubrir es: " + wordToDiscover)
         // Declaro dos alphabet porque uno tiene el espacio y otro no
         let alphabet = 'qwertyuiopasdfghjklñzxcvbnm';
         let lettersCounterPerRow = 0;
@@ -86,10 +86,10 @@ window.onload = function () {
                 insertedWord += key;
                 insertWordInTable(insertedWord, attempt);
             } else if (event.key === "Enter") {
+                event.preventDefault(); // Esto limita el uso del enter para que solo sirva para enviar la palabra
                 sendWordHandler(); // llamamos al handler del botón enviar
             }
         }
-       
 
         function sendWordHandler(){
             if (lettersCounterPerRow > 4){
@@ -109,7 +109,6 @@ window.onload = function () {
         // Asigna el handler al botón enviar
         document.getElementById("sendWord").addEventListener('click', sendWordHandler);
 
-
     }
 
     resetValues();
@@ -118,6 +117,8 @@ window.onload = function () {
         let arrayWordToDiscover = wordToDiscover.toLowerCase().split("");
         let arrayinsertedWord = insertedWord.toLowerCase().split("");
         let correctLettersIn = ["_", "_", "_", "_", "_"];
+        let missPlacedLetters = ["_", "_", "_", "_", "_"];
+        let correctLettersCounter = 0;
         for (let k = 0; k < 5; k++){
             if (arrayinsertedWord[k] == arrayWordToDiscover[k]){
                 // Aqui buscamos la fila en la que hemos introducido la palabra
@@ -128,21 +129,27 @@ window.onload = function () {
                 document.getElementById(arrayinsertedWord[k]).style.backgroundColor = "green";
                 // Añadimos la letra al array de letras correctas para evitar duplicidades
                 correctLettersIn[k] = arrayWordToDiscover[k];
+                correctLettersCounter++;
             } else {
+                let missplacedLettersCounter = 0;
                 for (let m = 0; m < 5; m++){
                     if (arrayinsertedWord[k] == arrayWordToDiscover[m] && arrayinsertedWord[m] != correctLettersIn[m]){
-                       // Aqui buscamos la fila en la que hemos introducido la palabra
+                        // Aqui buscamos la fila en la que hemos introducido la palabra
                         var attemptRow = document.getElementById("wordIn__" + attempt);
                         // mediante "cells" de js accedemos al td que nos interesa y le cambiamos el color
-                        attemptRow.cells[k].style.backgroundColor = "orange";
+                        if (missplacedLettersCounter > 0) attemptRow.cells[k].style.backgroundColor = "orange";
                         // ahora le cambiamos el color a la tecla del teclado
                         document.getElementById(arrayinsertedWord[k]).style.backgroundColor = "orange"; 
                     }
+                    else {
+                        document.getElementById(arrayinsertedWord[k]).style.backgroundColor = "gray"; 
+                    }
                 }
             }
-        }
+        } 
+        if (correctLettersCounter == 5) gamePassedPopUp();
+        if (correctLettersCounter < 5 && attempt == 5) gameOverPopUp();
     }
-
 
     function insertWordInTable(wordToDiscover, rowNumber){
         // Cogemos la referencia de la tabla
@@ -150,5 +157,31 @@ window.onload = function () {
         var columns = row.getElementsByTagName("td");
         // Itera sobre las celdas y asigna las letras de la palabra
         for (var i = 0; i < 5; i++) columns[i].innerHTML = wordToDiscover.charAt(i).toUpperCase();
+    }
+      
+    function gamePassedPopUp() {
+        Swal.fire({
+            title: '¡Has ganado!',
+            text: '¿Quieres jugar otra partida?',
+            icon: 'success',
+            confirmButtonText: 'Jugar otra partida'
+        }).then((result) => {
+            console.log("Swal ejecutado");
+            if (result.isConfirmed) {
+                resetValues();
+            }
+        });
+    }   
+    function gameOverPopUp() {
+        Swal.fire({
+            title: 'Has perdido amigo mío',
+            text: '¿Quieres jugar otra partida?' ,
+            icon: 'error', 
+            confirmButtonText: 'Jugar otra partida'
+        }).then((result) => {
+            // if (result.isConfirmed) {
+            //     resetGame();
+            // }
+        });
     }
 }

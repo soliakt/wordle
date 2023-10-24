@@ -15,6 +15,17 @@ nav {
     font-size: 24px;
 }
 
+.additionalButtons{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.additionalButtons button{
+    margin: 0 5px;
+}
+
 .lettersKeyboard{
     display: flex;
     align-items: center;

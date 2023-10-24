@@ -1,5 +1,4 @@
 window.onload = function () {
-    const lettersInAlphabet = 27;
     var wordToDiscover = ""; // Variable global para la palabra a descubrir
     var lettersCounterPerRow = 0; // Variable global para el contador de letras
     var insertedWord = ""; // Variable global para la palabra insertada
@@ -121,6 +120,11 @@ window.onload = function () {
         document.getElementById("sendWord").addEventListener('click', sendWordHandler);
         // Agregamos el evento al botón eliminar
         document.getElementById("deleteLetter").addEventListener('click', deleteLastLetter);
+        // Agregamos el evento al botón reiniciar valores
+        document.getElementById("buttonResetGame").addEventListener('click', function(){
+            cleanTable();
+            resetValues();
+        });
     }
 
     resetValues();
@@ -196,29 +200,35 @@ window.onload = function () {
     }
       
     function gamePassedPopUp() {
-        Swal.fire({
-            title: '¡Has ganado!',
-            text: '¿Quieres jugar otra partida?',
-            icon: 'success',
-            confirmButtonText: 'Jugar otra partida'
-        }).then((result) => {
-            console.log("Swal ejecutado");
-            if (result.isConfirmed) {
-                cleanTable();
-                resetValues();
-            }
-        });
-    }   
-    function gameOverPopUp() {
-        Swal.fire({
-            title: 'Has perdido amigo mío',
-            text: '¿Quieres jugar otra partida?' ,
-            icon: 'error', 
-            confirmButtonText: 'Jugar otra partida'
-        }).then((result) => {
-            // if (result.isConfirmed) {
-            //     resetGame();
-            // }
-        });
+        setTimeout(function() {
+            Swal.fire({
+                title: '¡Has ganado!',
+                text: '¿Quieres jugar otra partida?',
+                icon: 'success',
+                confirmButtonText: 'Jugar otra partida'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    cleanTable();
+                    resetValues();
+                }
+            });
+        }, 1000); // 1000 milisegundos (1 segundo)
     }
+       
+    function gameOverPopUp() {
+        setTimeout(function() {
+            Swal.fire({
+                title: 'Has perdido amigo mío',
+                text: '¿Quieres jugar otra partida?' ,
+                icon: 'error', 
+                confirmButtonText: 'Jugar otra partida'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    cleanTable();
+                    resetValues();
+                }
+            });
+        }, 1000);
+    }
+    
 }

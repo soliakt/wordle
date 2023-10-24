@@ -66,9 +66,20 @@ window.onload = function () {
     generateKeyboard();
 
     function resetValues(){
-        var wordsToDiscover = ["marea", "arena", "diana"];
-        wordToDiscover = wordsToDiscover[Math.floor(Math.random() * wordsToDiscover.length)].toUpperCase();
-        alert("SPOILER ALERT. La palabra a descubrir es: " + wordToDiscover);
+        //var wordsToDiscover = ["marea", "arena", "diana"];
+        const url = 'https://clientes.api.greenborn.com.ar/public-random-word?c=9&l=5';
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                wordToDiscover = data[Math.floor(Math.random() * data.length)];
+                // Aquí puedes usar el array "words" con las palabras de 5 letras.
+                console.log("Palabra a descubrir: " + wordToDiscover);
+            })
+            .catch(error => {
+                console.error('Error al obtener palabras:', error);
+            });    
+        //alert("SPOILER ALERT. La palabra a descubrir es: " + wordToDiscover);
 
         function letterClickedHandler(){
             if (lettersCounterPerRow < 5){

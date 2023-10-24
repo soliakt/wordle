@@ -1,5 +1,10 @@
 window.onload = function () {
     const lettersInAlphabet = 27;
+    var wordToDiscover = ""; // Variable global para la palabra a descubrir
+    var lettersCounterPerRow = 0; // Variable global para el contador de letras
+    var insertedWord = ""; // Variable global para la palabra insertada
+    var attempt = 0; // Variable global para el intento
+    const alphabet = 'qwertyuiopasdfghjklñzxcvbnm';
 
 
     function generateLettersSquares(){
@@ -35,7 +40,7 @@ window.onload = function () {
         const numRows = 3;
         const numColumns = 10;
         let lettersCounter = 0;
-        let alphabet = 'QWERTYUIOPASDFGHJKLÑ ZXCVBNM';
+        let alphabetKeyboard = 'QWERTYUIOPASDFGHJKLÑ ZXCVBNM';  // Declaro dos alphabet porque uno tiene el espacio y otro no
         for (let i = 0; i < numRows; i++) {
             const row = document.createElement('tr');
             row.classList.add('lettersKeyboard');
@@ -47,7 +52,7 @@ window.onload = function () {
                     j++;
                 }
                 else {
-                    const letter = alphabet.charAt(lettersCounter);
+                    const letter = alphabetKeyboard.charAt(lettersCounter);
                     cell.innerHTML = `<button type="button" id="${letter.toLowerCase()}">${letter}</button>`;
                 }
                 row.appendChild(cell);
@@ -64,12 +69,7 @@ window.onload = function () {
     function resetValues(){
         var wordsToDiscover = ["marea", "arena", "diana"];
         wordToDiscover = wordsToDiscover[Math.floor(Math.random() * wordsToDiscover.length)].toUpperCase();
-        //alert("SPOILER ALERT. La palabra a descubrir es: " + wordToDiscover)
-        // Declaro dos alphabet porque uno tiene el espacio y otro no
-        let alphabet = 'qwertyuiopasdfghjklñzxcvbnm';
-        let lettersCounterPerRow = 0;
-        let insertedWord = "";
-        let attempt = 0;
+        alert("SPOILER ALERT. La palabra a descubrir es: " + wordToDiscover);
 
         function letterClickedHandler(){
             if (lettersCounterPerRow < 5){
@@ -79,12 +79,23 @@ window.onload = function () {
             } else sendWordHandler(); // llamamos al handler del botón enviar
         }
 
+        function deleteLastLetter(){
+            if (insertedWord.length > 0) {
+                insertedWord = insertedWord.slice(0, -1);
+                insertWordInTable(insertedWord, attempt);
+                lettersCounterPerRow--; 
+            }
+        }
+
         function keyDownHandler(event){
             const key = event.key.toLowerCase();
             if (alphabet.includes(key) && lettersCounterPerRow < 5) { // el .includes(key) nos asegura que solo se escuchan las teclas del abecedario
                 lettersCounterPerRow++;
                 insertedWord += key;
                 insertWordInTable(insertedWord, attempt);
+            } else if (key === "backspace") {
+                event.preventDefault(); // Esto limita el uso del delete para que solo sirva para borrar una letra
+                deleteLastLetter();
             } else if (event.key === "Enter") {
                 event.preventDefault(); // Esto limita el uso del enter para que solo sirva para enviar la palabra
                 sendWordHandler(); // llamamos al handler del botón enviar
@@ -108,16 +119,37 @@ window.onload = function () {
 
         // Asigna el handler al botón enviar
         document.getElementById("sendWord").addEventListener('click', sendWordHandler);
-
+        // Agregamos el evento al botón eliminar
+        document.getElementById("deleteLetter").addEventListener('click', deleteLastLetter);
     }
 
     resetValues();
+    
+    function cleanTable(){
+        // Restablece las variables
+        lettersCounterPerRow = 0;
+        insertedWord = "";
+        attempt = 0;
+
+        // Dejamos tanto la tabla como el teclado con el fondo blanco
+        for (let k = 0; k < 5; k++) {
+            for (let o = 0; o < 5; o++) {
+                var attemptRow = document.getElementById("wordIn__" + k);
+                attemptRow.cells[o].style.backgroundColor = "white";
+                attemptRow.cells[o].innerHTML = ""; // Limpia el contenido de la celda
+            }
+        }
+        // Limpiar el teclado
+        for (let k = 0; k < alphabet.length; k++) {
+            document.getElementById(alphabet.charAt(k)).style.backgroundColor = "white";
+        }
+
+    }
 
     function processInput(wordToDiscover, insertedWord, attempt){
         let arrayWordToDiscover = wordToDiscover.toLowerCase().split("");
         let arrayinsertedWord = insertedWord.toLowerCase().split("");
         let correctLettersIn = ["_", "_", "_", "_", "_"];
-        let missPlacedLetters = ["_", "_", "_", "_", "_"];
         let correctLettersCounter = 0;
         for (let k = 0; k < 5; k++){
             if (arrayinsertedWord[k] == arrayWordToDiscover[k]){
@@ -137,13 +169,15 @@ window.onload = function () {
                         // Aqui buscamos la fila en la que hemos introducido la palabra
                         var attemptRow = document.getElementById("wordIn__" + attempt);
                         // mediante "cells" de js accedemos al td que nos interesa y le cambiamos el color
-                        if (missplacedLettersCounter > 0) attemptRow.cells[k].style.backgroundColor = "orange";
+                        attemptRow.cells[k].style.backgroundColor = "orange";
                         // ahora le cambiamos el color a la tecla del teclado
-                        document.getElementById(arrayinsertedWord[k]).style.backgroundColor = "orange"; 
+                        document.getElementById(arrayinsertedWord[k]).style.backgroundColor = "orange";
+                        missplacedLettersCounter++; 
                     }
-                    else {
-                        document.getElementById(arrayinsertedWord[k]).style.backgroundColor = "gray"; 
-                    }
+                }
+                if (missplacedLettersCounter === 0) {
+                    // Letra incorrecta
+                    document.getElementById(arrayinsertedWord[k]).style.backgroundColor = "gray";
                 }
             }
         } 
@@ -152,6 +186,8 @@ window.onload = function () {
     }
 
     function insertWordInTable(wordToDiscover, rowNumber){
+        //alert("Attempt: " + rowNumber);
+        
         // Cogemos la referencia de la tabla
         var row = document.getElementById('wordIn__' + rowNumber);
         var columns = row.getElementsByTagName("td");
@@ -168,6 +204,7 @@ window.onload = function () {
         }).then((result) => {
             console.log("Swal ejecutado");
             if (result.isConfirmed) {
+                cleanTable();
                 resetValues();
             }
         });

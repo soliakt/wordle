@@ -4,6 +4,8 @@ window.onload = function () {
     var insertedWord = ""; // Variable global para la palabra insertada
     var attempt = 0; // Variable global para el intento
     const alphabet = 'qwertyuiopasdfghjklñzxcvbnm';
+    var url = "";
+    let instructionsShown = false;
 
 
     function generateLettersSquares(){
@@ -66,13 +68,9 @@ window.onload = function () {
     }
     generateKeyboard();
 
-    function wordGenerator(){
-
-    }
 
     function gameInnit(){
-        //var wordsToDiscover = ["marea", "arena", "diana"];
-        const url = 'https://clientes.api.greenborn.com.ar/public-random-word?c=9&l=5';
+        url = 'https://clientes.api.greenborn.com.ar/public-random-word?c=9&l=5';
         fetch(url)
             .then(response => response.json())
             .then(data => {
@@ -83,48 +81,6 @@ window.onload = function () {
             .catch(error => {
                 console.error('Error al obtener palabras:', error);
             });    
-        //alert("SPOILER ALERT. La palabra a descubrir es: " + wordToDiscover);
-
-        function letterClickedHandler(){
-            if (lettersCounterPerRow < 5){
-                lettersCounterPerRow++;
-                insertedWord += this.id;
-                insertWordInTable(insertedWord, attempt);
-            } else sendWordHandler(); // llamamos al handler del botón enviar
-        }
-
-        function deleteLastLetter(){
-            if (insertedWord.length > 0) {
-                insertedWord = insertedWord.slice(0, -1);
-                insertWordInTable(insertedWord, attempt);
-                lettersCounterPerRow--; 
-            }
-        }
-
-        function keyDownHandler(event){
-            console.log("keyDownHandler");
-            const key = event.key.toLowerCase();
-            if (alphabet.includes(key) && lettersCounterPerRow < 5) { // el .includes(key) nos asegura que solo se escuchan las teclas del abecedario
-                lettersCounterPerRow++;
-                insertedWord += key;
-                insertWordInTable(insertedWord, attempt);
-            } else if (key === "backspace") {
-                event.preventDefault(); // Esto limita el uso del delete para que solo sirva para borrar una letra
-                deleteLastLetter();
-            } else if (key === "enter") {
-                event.preventDefault(); // Esto limita el uso del enter para que solo sirva para enviar la palabra
-                sendWordHandler(); // llamamos al handler del botón enviar
-            }
-        }
-
-        function sendWordHandler(){
-            if (lettersCounterPerRow > 4){
-                processInput(wordToDiscover, insertedWord, attempt);
-                lettersCounterPerRow = 0;
-                attempt++;
-                insertedWord = "";
-            }
-        }
 
         // Esto asigna las funciones a los eventos
         for (var i = 0; i < alphabet.length; i++) {
@@ -134,6 +90,12 @@ window.onload = function () {
 
         // Asigna el handler al botón enviar
         document.getElementById("sendWord").addEventListener('click', sendWordHandler);
+        // Asigna el handler al botón instrucciones
+        document.getElementById("buttonInstructions").addEventListener('click', function(){
+            if (!instructionsShown) {
+                instructionsPopUp();
+            }
+        });
         // Agregamos el evento al botón eliminar
         document.getElementById("deleteLetter").addEventListener('click', deleteLastLetter);
         // Agregamos el evento al botón reiniciar valores
@@ -141,6 +103,47 @@ window.onload = function () {
             cleanTable();
             gameInnit();
         });
+    }
+
+
+    function deleteLastLetter(){
+        if (insertedWord.length > 0) {
+            insertedWord = insertedWord.slice(0, -1);
+            insertWordInTable(insertedWord, attempt);
+            lettersCounterPerRow--; 
+        }
+    }
+
+    function keyDownHandler(event){
+        const key = event.key.toLowerCase();
+        if (alphabet.includes(key) && lettersCounterPerRow < 5) { // el .includes(key) nos asegura que solo se escuchan las teclas del abecedario
+            lettersCounterPerRow++;
+            insertedWord += key;
+            insertWordInTable(insertedWord, attempt);
+        } else if (key === "backspace") {
+            event.preventDefault(); // Esto limita el uso del delete para que solo sirva para borrar una letra
+            deleteLastLetter();
+        } else if (key === "enter") {
+            event.preventDefault(); // Esto limita el uso del enter para que solo sirva para enviar la palabra
+            sendWordHandler(); // llamamos al handler del botón enviar
+        }
+    }
+
+    function sendWordHandler(){
+        if (lettersCounterPerRow > 4){
+            processInput(wordToDiscover, insertedWord, attempt);
+            lettersCounterPerRow = 0;
+            attempt++;
+            insertedWord = "";
+        }
+    }
+
+    function letterClickedHandler(){
+        if (lettersCounterPerRow < 5){
+            lettersCounterPerRow++;
+            insertedWord += this.id;
+            insertWordInTable(insertedWord, attempt);
+        } else sendWordHandler(); // llamamos al handler del botón enviar
     }
 
     
@@ -204,8 +207,6 @@ window.onload = function () {
     }
 
     function insertWordInTable(wordToDiscover, rowNumber){
-        //alert("Attempt: " + rowNumber);
-        
         // Cogemos la referencia de la tabla
         var row = document.getElementById('wordIn__' + rowNumber);
         var columns = row.getElementsByTagName("td");
@@ -223,10 +224,10 @@ window.onload = function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     cleanTable();
-                    //gameInnit();
+                    gameInnit();
                 }
             });
-        }, 1000); // 1000 milisegundos (1 segundo)
+        }, 500); // 500 milisegundos (0,5 segundos)
     }
        
     function gameOverPopUp() {
@@ -239,10 +240,23 @@ window.onload = function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     cleanTable();
-                    //gameInnit();
+                    gameInnit();
                 }
             });
-        }, 1000);
+        }, 500);
     }
-    
+
+    function instructionsPopUp(){
+        Swal.fire({
+            title: 'Instrucciones wordle',
+            text: `Escribir una palabra y ver las letras que has acertado.
+            Si la letra aparece en naranja es porque está en la palabra, pero ubicada en otra posición. 
+            Si la letra aparece en verde es porque está en la palabra y en esa exacta posición.
+            Si no tiene color es porque no está en la palabra.`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                instructionsShown = true;
+            }
+        })
+    }  
 }

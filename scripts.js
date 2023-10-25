@@ -152,6 +152,7 @@ window.onload = function () {
         lettersCounterPerRow = 0;
         insertedWord = "";
         attempt = 0;
+        instructionsShown = False;
 
         // Dejamos tanto la tabla como el teclado con el fondo blanco
         for (let k = 0; k < 6; k++) {

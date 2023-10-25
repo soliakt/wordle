@@ -62,10 +62,15 @@ window.onload = function () {
 
         // Añadir la tabla al elemento padre
         parentElement.appendChild(table);
+        gameInnit();
     }
     generateKeyboard();
 
-    function resetValues(){
+    function wordGenerator(){
+
+    }
+
+    function gameInnit(){
         //var wordsToDiscover = ["marea", "arena", "diana"];
         const url = 'https://clientes.api.greenborn.com.ar/public-random-word?c=9&l=5';
         fetch(url)
@@ -73,7 +78,6 @@ window.onload = function () {
             .then(data => {
                 console.log(data);
                 wordToDiscover = data[Math.floor(Math.random() * data.length)];
-                // Aquí puedes usar el array "words" con las palabras de 5 letras.
                 console.log("Palabra a descubrir: " + wordToDiscover);
             })
             .catch(error => {
@@ -98,6 +102,7 @@ window.onload = function () {
         }
 
         function keyDownHandler(event){
+            console.log("keyDownHandler");
             const key = event.key.toLowerCase();
             if (alphabet.includes(key) && lettersCounterPerRow < 5) { // el .includes(key) nos asegura que solo se escuchan las teclas del abecedario
                 lettersCounterPerRow++;
@@ -106,7 +111,7 @@ window.onload = function () {
             } else if (key === "backspace") {
                 event.preventDefault(); // Esto limita el uso del delete para que solo sirva para borrar una letra
                 deleteLastLetter();
-            } else if (event.key === "Enter") {
+            } else if (key === "enter") {
                 event.preventDefault(); // Esto limita el uso del enter para que solo sirva para enviar la palabra
                 sendWordHandler(); // llamamos al handler del botón enviar
             }
@@ -124,7 +129,7 @@ window.onload = function () {
         // Esto asigna las funciones a los eventos
         for (var i = 0; i < alphabet.length; i++) {
             document.getElementById(alphabet[i]).addEventListener('click', letterClickedHandler);
-            window.addEventListener('keydown', keyDownHandler);
+            document.addEventListener('keyup', keyDownHandler);
         }
 
         // Asigna el handler al botón enviar
@@ -134,11 +139,10 @@ window.onload = function () {
         // Agregamos el evento al botón reiniciar valores
         document.getElementById("buttonResetGame").addEventListener('click', function(){
             cleanTable();
-            resetValues();
+            gameInnit();
         });
     }
 
-    resetValues();
     
     function cleanTable(){
         // Restablece las variables
@@ -147,7 +151,7 @@ window.onload = function () {
         attempt = 0;
 
         // Dejamos tanto la tabla como el teclado con el fondo blanco
-        for (let k = 0; k < 5; k++) {
+        for (let k = 0; k < 6; k++) {
             for (let o = 0; o < 5; o++) {
                 var attemptRow = document.getElementById("wordIn__" + k);
                 attemptRow.cells[o].style.backgroundColor = "white";
@@ -158,7 +162,6 @@ window.onload = function () {
         for (let k = 0; k < alphabet.length; k++) {
             document.getElementById(alphabet.charAt(k)).style.backgroundColor = "white";
         }
-
     }
 
     function processInput(wordToDiscover, insertedWord, attempt){
@@ -220,7 +223,7 @@ window.onload = function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     cleanTable();
-                    resetValues();
+                    //gameInnit();
                 }
             });
         }, 1000); // 1000 milisegundos (1 segundo)
@@ -236,7 +239,7 @@ window.onload = function () {
             }).then((result) => {
                 if (result.isConfirmed) {
                     cleanTable();
-                    resetValues();
+                    //gameInnit();
                 }
             });
         }, 1000);
